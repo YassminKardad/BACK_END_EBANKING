@@ -20,12 +20,12 @@ import java.util.List;
 @AllArgsConstructor
 public class Compte {
     @Id
-    private String id;
+    private int id;
     private double balance;
     private Date createdAt;
     @Enumerated(EnumType.STRING)
     private AccountStatus status;
-    @ManyToOne
+    @OneToOne
     private Client customer;
 
     @OneToMany(mappedBy = "bankAccount",fetch = FetchType.LAZY)
@@ -38,13 +38,13 @@ public class Compte {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Compte(String id, double balance) {
+	public Compte(int id, double balance) {
 		super();
 		this.id = id;
 		this.balance = balance;
 	}
 
-	public Compte(String id, double balance, Date createdAt, AccountStatus status, Client customer,
+	public Compte(int id, double balance, Date createdAt, AccountStatus status, Client customer,
 			List<AccountOperation> accountOperations) {
 		super();
 		this.id = id;
@@ -55,11 +55,11 @@ public class Compte {
 		this.accountOperations = accountOperations;
 	}
 
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 

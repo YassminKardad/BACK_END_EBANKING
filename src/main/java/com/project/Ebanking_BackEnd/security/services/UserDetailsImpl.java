@@ -4,16 +4,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.project.Ebanking_BackEnd.models.Client;
 import com.project.Ebanking_BackEnd.models.Role;
 import com.project.Ebanking_BackEnd.models.User;
 
@@ -136,6 +132,9 @@ public String getName() {
 	return (String) this.firstname+" "+this.lastname;
 }
 
+public Client getClientId() {
+	return this.getUser().getClient();
+}
 
 
 @Override

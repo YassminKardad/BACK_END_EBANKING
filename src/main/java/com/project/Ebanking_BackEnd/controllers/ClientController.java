@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,6 +35,7 @@ import com.project.Ebanking_BackEnd.models.AccountOperation;
 import com.project.Ebanking_BackEnd.models.Client;
 import com.project.Ebanking_BackEnd.models.Compte;
 import com.project.Ebanking_BackEnd.models.ERole;
+import com.project.Ebanking_BackEnd.models.Facture;
 import com.project.Ebanking_BackEnd.models.Role;
 import com.project.Ebanking_BackEnd.models.User;
 import com.project.Ebanking_BackEnd.payload.request.AddClientRequest;
@@ -45,12 +47,16 @@ import com.project.Ebanking_BackEnd.repository.ClientRepository;
 import com.project.Ebanking_BackEnd.repository.OperationType;
 import com.project.Ebanking_BackEnd.repository.RoleRepository;
 import com.project.Ebanking_BackEnd.repository.UserRepository;
+import com.project.Ebanking_BackEnd.security.services.UserDetailsImpl;
+import com.project.Ebanking_BackEnd.services.ClientOperationsService;
 import com.project.Ebanking_BackEnd.services.ClientService;
 import com.project.Ebanking_BackEnd.services.EmailServiceImp;
+import com.project.Ebanking_BackEnd.services.FactureService;
 import com.project.Ebanking_BackEnd.services.UserService;
 
 @RestController
 @RequestMapping("/api/client")
+@CrossOrigin(origins= "http://localhost:4200/")
 public class ClientController {
 	@Autowired
     private BankAccountRepository bankAccountRepository;
@@ -58,7 +64,8 @@ public class ClientController {
     AccountOperationRepository accountOperationRepository;
 	@Autowired
     ClientService serv;
-	
+	@Autowired
+	ClientOperationsService clietOpServ;
 	 @Autowired
 	  UserRepository userRepository;
 	 
@@ -76,6 +83,8 @@ public class ClientController {
 	  
 	  @Autowired
 		 UserService user_serv;
+	  @Autowired
+	  FactureService fact_serv;
 	  
     @Autowired
     public ClientController(ClientService serv) {
@@ -221,7 +230,7 @@ public class ClientController {
         accountOperation.setAmount(amount);
         accountOperation.setDescription(null);
         accountOperation.setOperationDate(null);
-        accountOperation.setBankAccount(bankAccount);
+        accountOperation.setBankaccount(bankAccount);
         accountOperationRepository.save(accountOperation);
         bankAccount.setBalance(bankAccount.getBalance()-amount);
         bankAccountRepository.save(bankAccount);
@@ -235,7 +244,7 @@ public class ClientController {
         accountOperation.setType(OperationType.CREDIT);
         accountOperation.setAmount(amount);
         accountOperation.setOperationDate(null);
-        accountOperation.setBankAccount(bankAccount);
+        accountOperation.setBankaccount(bankAccount);
         accountOperationRepository.save(accountOperation);
         bankAccount.setBalance(bankAccount.getBalance()+amount);
         bankAccountRepository.save(bankAccount);
@@ -246,10 +255,10 @@ public class ClientController {
         credit(accountIdDestination,amount);
     }
 	
-	@GetMapping("/Historique/{accountId}")
-	public List<AccountOperation> findByBankAccountId(@PathVariable String accountId) {
+	@GetMapping("/Historique/{id}")
+	public List<AccountOperation> findByBankAccountId(@PathVariable int id) {
 		
-        return accountOperationRepository.findByBankAccountId(accountId);
+        return clietOpServ.find(id);
     }
 
 	@GetMapping("/profil")
@@ -268,5 +277,33 @@ public class ClientController {
 		  
 		  return user;
 	  }
+	
+	
+	/*@GetMapping("/getImpayed")
+	  public String getImpayed() {
+		this.getInfos();
+		return null;
+	  }
+	  */
+	@GetMapping("/payed/{id}")
+	public List<Facture> find(@PathVariable int id)
+	{
+		return fact_serv.find(id);
+	 }
+	
+	@GetMapping("/facture/{id}")
+	public Facture findFacture(@PathVariable int id)
+	{
+		return fact_serv.findById(id);
+	 }
+   
+	 @GetMapping("/updateFacture/{id}/{factureid}")
+	public int updateFacture(@PathVariable int id,@PathVariable int factureid)
+	{
+		return fact_serv.update(id,factureid);
+	}
+	 
+	
+	
 	  
 }

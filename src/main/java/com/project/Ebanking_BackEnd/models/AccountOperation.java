@@ -22,18 +22,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AccountOperation {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
     private Date operationDate;
     private double amount;
     @Enumerated(EnumType.STRING)
     private OperationType type;
     @ManyToOne
     private Compte bankAccount;
+    
     private String description;
-	public Long getId() {
+	public int getId() {
 		return id;
 	}
-	public void setId(Long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	public Date getOperationDate() {
@@ -54,10 +55,10 @@ public class AccountOperation {
 	public void setType(OperationType type) {
 		this.type = type;
 	}
-	public Compte getBankAccount() {
+	public Compte getBankaccount() {
 		return bankAccount;
 	}
-	public void setBankAccount(Compte bankAccount) {
+	public void setBankaccount(Compte bankAccount) {
 		this.bankAccount = bankAccount;
 	}
 	public String getDescription() {

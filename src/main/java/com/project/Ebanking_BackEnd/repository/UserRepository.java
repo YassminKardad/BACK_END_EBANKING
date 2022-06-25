@@ -19,8 +19,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
   User findById(int id);
   User findByPassword(String password);
 
-User findByClient(Client stdu);
+  User findByClient(Client stdu);
 
-User findByAgent(Agent stdu);
+  User findByAgent(Agent stdu);
  
 }

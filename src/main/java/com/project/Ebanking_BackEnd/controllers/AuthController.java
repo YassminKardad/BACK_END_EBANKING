@@ -62,10 +62,10 @@ import com.project.Ebanking_BackEnd.services.EmailServiceImp;
 import com.project.Ebanking_BackEnd.services.UserService;
 
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/auth")
-public class AuthController {
+public class AuthController {	
   @Autowired
    UserService serv;
   

@@ -126,6 +126,16 @@ public class User {
 	 * Constructer for Admin Only ------ JUST TO TEST SIGNUP
 	 */
 	
+	public Client getClient() {
+		return client;
+	}
+
+
+	public void setClient(Client client) {
+		this.client = client;
+	}
+
+
 	public User(@NotBlank @Size(max = 30) String firstname, @NotBlank @Size(max = 30) String lastname,
 			@Email String email,String pass) {
 		

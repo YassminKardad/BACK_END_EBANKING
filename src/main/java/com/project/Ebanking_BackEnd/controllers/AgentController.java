@@ -4,14 +4,15 @@ import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +39,7 @@ import com.project.Ebanking_BackEnd.repository.RoleRepository;
 import com.project.Ebanking_BackEnd.repository.UserRepository;
 import com.project.Ebanking_BackEnd.services.AgentService;
 import com.project.Ebanking_BackEnd.services.UserService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @RestController
 @RequestMapping("/api/agent")
