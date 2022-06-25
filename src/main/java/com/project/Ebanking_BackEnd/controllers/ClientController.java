@@ -95,8 +95,8 @@ public class ClientController {
     public List<Client> getAllClients(){
         return serv.getAllClients();
     }           
-    @GetMapping(value="/clients/{id}")
-    public Client getClientById(@PathVariable("id") @Min(1) int id) {
+    @GetMapping(value="/clients/{firstname}")
+    public Client getClientById(@PathVariable("firstname") @Min(1) int id) {
    	 Client std = serv.findById(id)
                                     .orElseThrow(()->new AgentNotFoundException("Client with "+id+" is Not Found!"));
         return std;

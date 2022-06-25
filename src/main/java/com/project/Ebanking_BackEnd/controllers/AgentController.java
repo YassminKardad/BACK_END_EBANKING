@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,6 +43,8 @@ import com.project.Ebanking_BackEnd.services.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @RestController
+
+@CrossOrigin(origins= "http://localhost:4200")
 @RequestMapping("/api/agent")
 public class AgentController {
 	AgentService serv;
@@ -94,7 +97,9 @@ public class AgentController {
       
       //Generate password 
       char[] password= User.generatePassword();
-      System.out.println("generated password is :  "+password.toString());
+      System.out.println(password);
+      //System.out.println(java.nio.CharBuffer.wrap(password));
+      System.out.println(String.valueOf(password));
       
      Agent user1 = new Agent(signUpRequest.getFirstname(),signUpRequest.getLastname(),signUpRequest.getPhone(),signUpRequest.getAddress(),signUpRequest.getDateOfBirth(),
                            signUpRequest.getEmail(),signUpRequest.getConfirmationEmail(),signUpRequest.getPieceIdentity(),signUpRequest.getN_pieceIdentity(),signUpRequest.getN_Immatr(),signUpRequest.getN_Pattente(),signUpRequest.getPieceJointe()                         );
