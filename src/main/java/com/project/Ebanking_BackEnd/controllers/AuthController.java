@@ -51,6 +51,7 @@ import com.project.Ebanking_BackEnd.models.User;
 import com.project.Ebanking_BackEnd.payload.request.ChangePasswordRequest;
 import com.project.Ebanking_BackEnd.payload.request.LoginRequest;
 import com.project.Ebanking_BackEnd.payload.request.SignupRequest;
+import com.project.Ebanking_BackEnd.payload.response.JwtResponse;
 import com.project.Ebanking_BackEnd.payload.response.MessageResponse;
 import com.project.Ebanking_BackEnd.payload.response.UserInfoResponse;
 import com.project.Ebanking_BackEnd.repository.AdminRepository;
@@ -97,7 +98,7 @@ public class AuthController {
   ClientService client_serv;
 
   @PostMapping("/signin")
-  public ResponseEntity<UserInfoResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+  public ResponseEntity<JwtResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
     Authentication authentication = authenticationManager
         .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
@@ -106,15 +107,24 @@ public class AuthController {
 
     UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-    ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
+    String jwt = jwtUtils.generateJwtToken(authentication);
 
     List<String> roles = userDetails.getAuthorities().stream()
         .map(item -> item.getAuthority())
         .collect(Collectors.toList());
-    return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-            .body(new UserInfoResponse(userDetails.getId(),
-                                       roles));   /* return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-        .body(roles);*/
+  // return new UserInfoResponse(userDetails.getId(),roles, userDetails.getUser().getAdmin(),userDetails.getUser().getClient() ,userDetails.getUser().getAgent());
+    
+   
+
+   return ResponseEntity.ok(new JwtResponse(jwt, 
+           userDetails.getId(), 
+           userDetails.getUsername(), 
+           userDetails.getEmail(), 
+           userDetails.getUser().getClient(),
+           roles));
+   
+   /*return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+        .body(userDetails.getId(),roles);*/
   }
 
   @PostMapping("/signup")
@@ -143,39 +153,7 @@ public class AuthController {
     Role modRole = roleRepository.findByName(ERole.ROLE_ADMIN)
             .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
         roles.add(modRole);
-    /*Set<String> strRoles = signUpRequest.getRole();
-    Set<Role> roles = new HashSet<>();
-    
-    if (strRoles == null) {
-      Role userRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-          .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-      roles.add(userRole);
-    } else {
-      strRoles.forEach(role -> {
-        switch (role) {
-        case "admin":
-          Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-              .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-          roles.add(adminRole);
 
-          break;
-        case "client":
-          Role modRole = roleRepository.findByName(ERole.ROLE_CLIENT)
-              .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-          roles.add(modRole);
-          
-          break;
-        case "agent":
-            Role agentRole = roleRepository.findByName(ERole.ROLE_AGENT)
-                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            roles.add(agentRole);
-        default:
-          Role userRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-              .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-          roles.add(userRole);
-        }
-      });
-    }*/
    
     emailService.sendEmail(String.valueOf(password),signUpRequest.getEmail());
    
@@ -201,10 +179,7 @@ public class AuthController {
 	  
 	  if (principal instanceof UserDetailsImpl) {
 		  password = ((UserDetailsImpl)principal).getPassword();
-		  
-		  System.out.println("ok2");
 	  } else {
-		  System.out.println("ok1");
 		  password = principal.toString();
 	  }
 	  System.out.println(password);  
@@ -214,7 +189,6 @@ public class AuthController {
 	if(check) return ResponseEntity.ok(new MessageResponse("Don't Change Password"));
 	else return ResponseEntity.ok(new MessageResponse("Change Password"));
   } 
-  
   
   @PostMapping(value="/change_password")
   public ResponseEntity<String> changePassword(@RequestBody ChangePasswordRequest request) {

@@ -9,6 +9,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.project.Ebanking_BackEnd.models.Admin;
+import com.project.Ebanking_BackEnd.models.Agent;
 import com.project.Ebanking_BackEnd.models.Client;
 import com.project.Ebanking_BackEnd.models.Role;
 import com.project.Ebanking_BackEnd.models.User;
@@ -22,7 +24,73 @@ public class UserDetailsImpl implements UserDetails {
 
   private User user;
   
-  public UserDetailsImpl(User user) {
+  private Admin admin;
+  private Client client;
+  private Agent agent;
+  
+  
+  
+  public UserDetailsImpl(String firstname, String lastname, String email,Client client,
+		CharSequence password, Collection<? extends GrantedAuthority> authorities) {
+	super();
+	this.firstname = firstname;
+	this.lastname = lastname;
+	this.email = email;
+	this.client = client;
+	
+	this.password = password;
+	this.authorities = authorities;
+}
+
+public Admin getAdmin() {
+	return admin;
+}
+
+public void setAdmin(Admin admin) {
+	this.admin = admin;
+}
+
+public Client getClient() {
+	return client;
+}
+
+public void setClient(Client client) {
+	this.client = client;
+}
+
+public Agent getAgent() {
+	return agent;
+}
+
+public void setAgent(Agent agent) {
+	this.agent = agent;
+}
+
+public void setId(int id) {
+	this.id = id;
+}
+
+public void setFirstname(String firstname) {
+	this.firstname = firstname;
+}
+
+public void setLastname(String lastname) {
+	this.lastname = lastname;
+}
+
+public void setEmail(String email) {
+	this.email = email;
+}
+
+public void setPassword(CharSequence password) {
+	this.password = password;
+}
+
+public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
+	this.authorities = authorities;
+}
+
+public UserDetailsImpl(User user) {
       this.user = user;
   }
 
@@ -47,13 +115,14 @@ public void setUser(User user) {
 
   private Collection<? extends GrantedAuthority> authorities;
 
-  public UserDetailsImpl(int id, String firstname, String lastname,String email,CharSequence pass, Collection<? extends GrantedAuthority> authorities) {
+  public UserDetailsImpl(int id, String firstname, String lastname,String email,CharSequence pass, Client client2, Collection<? extends GrantedAuthority> authorities) {
 	super();
 	this.id = id;
 	this.firstname = firstname;
 	this.lastname = lastname;
 	this.email = email;
 	this.password = pass;
+	this.client=client2;
 	this.authorities = authorities;
 }
 
@@ -68,7 +137,8 @@ public void setUser(User user) {
         user.getId(), 
         user.getFirstname(),user.getLastname(),
         user.getEmail(),
-        user.getPassword(), 
+        user.getPassword(),
+        user.getClient(),
         authorities);
   }
   

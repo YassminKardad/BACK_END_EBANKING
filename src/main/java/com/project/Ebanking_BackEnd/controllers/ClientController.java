@@ -313,7 +313,7 @@ public class ClientController {
 		return fact_serv.update(id,factureid);
 	}
 	
-	@GetMapping("/checkSolde")
+	@GetMapping("/checkSolde/{id}/{factureid}")
 	public int checkSolde(@PathVariable int id,@PathVariable int factureid)
 	{
 		return fact_serv.checkSolde(id, factureid);
@@ -324,7 +324,7 @@ public class ClientController {
         service.sendSms(smsRequest);
     }
 	
-	@PostMapping("/validPay")
+	@PostMapping("/validPay/{id}/{factureid}")
     public void validPay(@PathVariable int id,@PathVariable int factureid){
 		fact_serv.validPay(id,factureid);
     }

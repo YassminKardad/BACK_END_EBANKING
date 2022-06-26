@@ -94,38 +94,6 @@ public class User {
       
       
 	
-	/*
-	 * Constructer for Agent
-	 */
-	/*public User(@NotBlank @Size(max = 30) String firstname, @NotBlank @Size(max = 30) String lastname,
-			@NotBlank @Size(max = 30) String phone, @NotBlank @Size(max = 30) String confirmationEmail,
-			@NotBlank @Size(max = 30) String address, Date dateOfBirth,
-			@Email String email ,String pieceIdentity,
-			String n_pieceIdentity, double n_Immatr, double n_Pattente, String pieceJointe,String pass) {
-		super();
-		this.firstname = firstname;
-		this.lastname = lastname;
-		this.phone = phone;
-		this.confirmationEmail = confirmationEmail;
-		this.address = address;
-		this.dateOfBirth = dateOfBirth;
-		this.has_Already_loggedIn = false;
-		this.email = email;
-		this.pieceIdentity = pieceIdentity;
-		this.n_pieceIdentity = n_pieceIdentity;
-		this.n_Immatr = n_Immatr;
-		this.n_Pattente = n_Pattente;
-		this.pieceJointe = pieceJointe;
-		this.password=pass;
-		System.out.println(this.password);
-		Role role = new Role(ERole.ROLE_AGENT);
-		this.roles.add(role);
-	}*/
-
-	/*
-	 * Constructer for Admin Only ------ JUST TO TEST SIGNUP
-	 */
-	
 	public Client getClient() {
 		return client;
 	}
@@ -149,31 +117,7 @@ public class User {
 		this.roles.add(role);*/	
 		}
 	
-	
-	/*
-	 * Constructer for Client
-	 */
-	/*public User(@NotBlank @Size(max = 30) String firstname, @NotBlank @Size(max = 30) String lastname,
-			@NotBlank @Size(max = 30) String phone, @NotBlank @Size(max = 30) String confirmationEmail,
-			@NotBlank @Size(max = 30) String address, Date dateOfBirth,
-			@Email String email, String pieceIdentity,
-			String n_pieceIdentity,String pass) {
-		super();
-		this.firstname = firstname;
-		this.lastname = lastname;
-		this.phone = phone;
-		this.confirmationEmail = confirmationEmail;
-		this.address = address;
-		this.dateOfBirth = dateOfBirth;
-		this.has_Already_loggedIn = false;
-		this.email = email;
-		this.pieceIdentity = pieceIdentity;
-		this.n_pieceIdentity = n_pieceIdentity;
-		this.password=pass;
-		System.out.println(this.password);
-		Role role = new Role(ERole.ROLE_CLIENT);
-		this.roles.add(role);
-	}*/
+
 	
 	//for Client
 	public User(@NotBlank @Size(max = 30) String firstname, @NotBlank @Size(max = 30) String lastname,
@@ -343,6 +287,29 @@ public class User {
        
         return password;
      }
+
+
+	public Agent getAgent() {
+		return agent;
+	}
+
+
+	public void setAgent(Agent agent) {
+		this.agent = agent;
+	}
+
+
+	public Admin getAdmin() {
+		return admin;
+	}
+
+
+	public void setAdmin(Admin admin) {
+		this.admin = admin;
+	}
+
+
+	
 
 
 	/*
