@@ -12,13 +12,13 @@ import com.project.Ebanking_BackEnd.services.AccountService;
  
 
 @RestController
-@RequestMapping("/api/fatiha")
+@RequestMapping("/api/agent")
 public class AccountController {
 	
 	@Autowired
 	AccountService serv;
 	
-	@GetMapping("/id/{id}")
+	@GetMapping(value="/id/{id}")
 	public Compte finde(@PathVariable int id) {
 		return serv.find(id);
 		

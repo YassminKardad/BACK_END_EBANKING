@@ -53,6 +53,8 @@ import com.project.Ebanking_BackEnd.services.ClientService;
 import com.project.Ebanking_BackEnd.services.EmailServiceImp;
 import com.project.Ebanking_BackEnd.services.FactureService;
 import com.project.Ebanking_BackEnd.services.UserService;
+import com.project.Ebanking_BackEnd.services.sms.Service;
+import com.project.Ebanking_BackEnd.services.sms.SmsRequest;
 
 @RestController
 @RequestMapping("/api/client")
@@ -86,6 +88,9 @@ public class ClientController {
 	
 	@Autowired
 	FactureService fact_serv;
+
+	@Autowired
+	Service service;
 	  
     @Autowired
     public ClientController(ClientService serv) {
@@ -137,8 +142,8 @@ public class ClientController {
      
       //emailService.sendEmail(String.valueOf(password),signUpRequest.getEmail());
     emailService.sendEmail(String.valueOf(password),signUpRequest.getEmail());
-
-     user.setRoles(roles);
+        
+      user.setRoles(roles);
       userRepository.save(user);
 
       return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
@@ -302,12 +307,30 @@ public class ClientController {
 		return fact_serv.findById(id);
 	 }
    
-	 @GetMapping("/updateFacture/{id}/{factureid}")
+	@GetMapping("/updateFacture/{id}/{factureid}")
 	public int updateFacture(@PathVariable int id,@PathVariable int factureid)
 	{
 		return fact_serv.update(id,factureid);
 	}
+	
+	@GetMapping("/checkSolde")
+	public int checkSolde(@PathVariable int id,@PathVariable int factureid)
+	{
+		return fact_serv.checkSolde(id, factureid);
+	}
+	
+	@PostMapping("/sendSMS")
+    public void sendSms( @Valid @RequestBody SmsRequest smsRequest){
+        service.sendSms(smsRequest);
+    }
+	
+	@PostMapping("/validPay")
+    public void validPay(@PathVariable int id,@PathVariable int factureid){
+		fact_serv.validPay(id,factureid);
+    }
+	
 	 
+	
 	
 	
 	  

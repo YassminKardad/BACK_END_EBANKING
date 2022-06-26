@@ -97,7 +97,7 @@ public class AuthController {
   ClientService client_serv;
 
   @PostMapping("/signin")
-  public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+  public ResponseEntity<UserInfoResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
     Authentication authentication = authenticationManager
         .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
@@ -111,9 +111,10 @@ public class AuthController {
     List<String> roles = userDetails.getAuthorities().stream()
         .map(item -> item.getAuthority())
         .collect(Collectors.toList());
-    //new UserInfoResponse(userDetails.getId(),userDetails.getEmail(),roles)
     return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-        .body(roles);
+            .body(new UserInfoResponse(userDetails.getId(),
+                                       roles));   /* return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+        .body(roles);*/
   }
 
   @PostMapping("/signup")
