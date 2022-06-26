@@ -12,6 +12,8 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.WebUtils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.Ebanking_BackEnd.models.User;
 import com.project.Ebanking_BackEnd.security.services.UserDetailsImpl;
 
 import io.jsonwebtoken.*;
@@ -37,7 +39,7 @@ public class JwtUtils {
       return null;
     }
   }
-
+  
   public ResponseCookie generateJwtCookie(UserDetailsImpl userPrincipal) {
     String jwt = generateTokenFromUsername(userPrincipal.getUsername());
     ResponseCookie cookie = ResponseCookie.from(jwtCookie, jwt).path("/api").maxAge(24 * 60 * 60).httpOnly(true).build();

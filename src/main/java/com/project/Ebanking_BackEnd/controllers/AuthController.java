@@ -42,6 +42,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.project.Ebanking_BackEnd.exceptions.AgentNotFoundException;
+import com.project.Ebanking_BackEnd.models.Admin;
 import com.project.Ebanking_BackEnd.models.Agent;
 import com.project.Ebanking_BackEnd.models.Client;
 import com.project.Ebanking_BackEnd.models.ERole;
@@ -52,6 +53,7 @@ import com.project.Ebanking_BackEnd.payload.request.LoginRequest;
 import com.project.Ebanking_BackEnd.payload.request.SignupRequest;
 import com.project.Ebanking_BackEnd.payload.response.MessageResponse;
 import com.project.Ebanking_BackEnd.payload.response.UserInfoResponse;
+import com.project.Ebanking_BackEnd.repository.AdminRepository;
 import com.project.Ebanking_BackEnd.repository.RoleRepository;
 import com.project.Ebanking_BackEnd.repository.UserRepository;
 import com.project.Ebanking_BackEnd.security.jwt.JwtUtils;
@@ -75,6 +77,9 @@ public class AuthController {
 
   @Autowired
   UserRepository userRepository;
+  
+  @Autowired
+  AdminRepository repo;
 
   @Autowired
   RoleRepository roleRepository;
@@ -113,33 +118,33 @@ public class AuthController {
 
   @PostMapping("/signup")
   public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-    /*if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-      return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
-    }*/
 
     if (userRepository.existsByEmail(signUpRequest.getEmail())) {
       return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
     }
 
-    // Create new user's account
-   
-    
     //Generate password 
     char[] password= User.generatePassword();
-    System.out.println("generated password is :  "+password.toString());
-    
+    Admin user1 = new Admin(signUpRequest.getFirstname(),signUpRequest.getLastname(),signUpRequest.getPhone(),signUpRequest.getAddress(),signUpRequest.getDateOfBirth(),
+            signUpRequest.getEmail(),signUpRequest.getConfirmationEmail()
+          );
+
+   repo.save(user1);
+
+			
    User user = new User(signUpRequest.getFirstname(),signUpRequest.getLastname(),
                          signUpRequest.getEmail(),
-                         encoder.encode(java.nio.CharBuffer.wrap(password)));
+                         encoder.encode(java.nio.CharBuffer.wrap(password)),user1);
 
-    System.out.println(password);
-    //System.out.println(java.nio.CharBuffer.wrap(password));
-    System.out.println(String.valueOf(password));
+    System.out.println(password);    
     
-    
-    Set<String> strRoles = signUpRequest.getRole();
     Set<Role> roles = new HashSet<>();
-
+    Role modRole = roleRepository.findByName(ERole.ROLE_ADMIN)
+            .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+        roles.add(modRole);
+    /*Set<String> strRoles = signUpRequest.getRole();
+    Set<Role> roles = new HashSet<>();
+    
     if (strRoles == null) {
       Role userRole = roleRepository.findByName(ERole.ROLE_ADMIN)
           .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
@@ -169,10 +174,10 @@ public class AuthController {
           roles.add(userRole);
         }
       });
-    }
-    //EmailServiceImp emailService = new EmailServiceImp();
+    }*/
    
     emailService.sendEmail(String.valueOf(password),signUpRequest.getEmail());
+   
     user.setRoles(roles);
     userRepository.save(user);
 

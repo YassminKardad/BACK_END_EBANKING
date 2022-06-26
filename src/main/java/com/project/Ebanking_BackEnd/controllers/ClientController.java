@@ -66,25 +66,26 @@ public class ClientController {
     ClientService serv;
 	@Autowired
 	ClientOperationsService clietOpServ;
-	 @Autowired
-	  UserRepository userRepository;
+	@Autowired
+	UserRepository userRepository;
 	 
-	  @Autowired
-	  ClientRepository repo;
+	@Autowired
+	ClientRepository repo;
 
-	  @Autowired
-	  RoleRepository roleRepository;
+	@Autowired
+	RoleRepository roleRepository;
 
-	  @Autowired
-	  PasswordEncoder encoder;
+	@Autowired
+	PasswordEncoder encoder;
 	  
-	  @Autowired
-	  EmailServiceImp emailService;
+	@Autowired
+	EmailServiceImp emailService;
 	  
-	  @Autowired
-		 UserService user_serv;
-	  @Autowired
-	  FactureService fact_serv;
+	@Autowired
+	UserService user_serv;
+	
+	@Autowired
+	FactureService fact_serv;
 	  
     @Autowired
     public ClientController(ClientService serv) {
@@ -111,15 +112,9 @@ public class ClientController {
         return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
       }
 
-      // Create new user's account
-     
-      
       //Generate password 
-      char[] password= User.generatePassword();
-      //System.out.println("generated password is :  "+password.toString());
-      
+      char[] password= User.generatePassword();      
       System.out.println(password);
-      //System.out.println(java.nio.CharBuffer.wrap(password));
       System.out.println(String.valueOf(password));
       
      Client user1 = new Client(signUpRequest.getFirstname(),signUpRequest.getLastname(),signUpRequest.getPhone(),signUpRequest.getAddress(),signUpRequest.getDateOfBirth(),
@@ -137,57 +132,18 @@ public class ClientController {
              .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
          roles.add(modRole);
          
-         //user.setRoles(ERole.ROLE_CLIENT);
-     // Set<String> strRoles = signUpRequest.getRole();
-     
-
-      /*if (strRoles == null) {
-        Role userRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-            .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-        roles.add(userRole);
-      } else {
-        strRoles.forEach(role -> {
-          switch (role) {
-          case "admin":
-            Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            roles.add(adminRole);
-
-            break;
-          case "client":
-            Role modRole = roleRepository.findByName(ERole.ROLE_CLIENT)
-                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            roles.add(modRole);
-            
-            break;
-          case "agent":
-              Role agentRole = roleRepository.findByName(ERole.ROLE_AGENT)
-                  .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-              roles.add(agentRole);
-          default:
-            Role userRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            roles.add(userRole);
-          }
-        });
-      }*/
+       
       //EmailServiceImp emailService = new EmailServiceImp();
      
       //emailService.sendEmail(String.valueOf(password),signUpRequest.getEmail());
+    emailService.sendEmail(String.valueOf(password),signUpRequest.getEmail());
+
      user.setRoles(roles);
       userRepository.save(user);
 
       return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
-    /*
-    @PostMapping(value="/clients", consumes = {"application/json"})
-    public Client addClient(@Valid @RequestBody Client std) {
-    	//public User(@NotBlank @Size(max = 30) String firstname, @NotBlank @Size(max = 30) String lastname, @Email String email, String password, Set<Role> roles) {
-
-    	User user = new User(std.getFirstname(),std.getLastname(),std.getEmail());
-        return serv.save(std);
-    }    */
-    
+   
     
     @PutMapping("/update_client/{id}")
     public Client updateClient(@PathVariable("id") @Min(1) int id, @Valid @RequestBody Client newstd) {
@@ -210,7 +166,8 @@ public class ClientController {
 
         
         return serv.save(stdu);   
-    }           
+    }
+    
     @DeleteMapping(value="/clients/{id}")
     public String deleteClient(@PathVariable("id") @Min(1) int id) {
    	 Client std = serv.findById(id)
@@ -261,7 +218,7 @@ public class ClientController {
         return clietOpServ.find(id);
     }
 
-	@GetMapping("/profil")
+	/*@GetMapping("/profil")
 	  public Object getInfos() {
 		
 		  Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -271,14 +228,62 @@ public class ClientController {
 		  } else {
 		    username = principal.toString();
 		  }
-		  
+		   
 		  System.out.println(username);  
-		  Optional<Client> user= serv.findByEmail(username);
-		  
+		  Optional<Client> user= repo.findByEmail(username);
+		  System.out.println(user.toString());  
+
 		  return user;
+	  }*/
+	
+	
+	// RETURN CONNECTED USER
+	 @GetMapping("/profil")
+	  public User getConnectdUser() {
+		  Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		     if (principal instanceof UserDetails) {
+		    	 User user = userRepository.findByEmail(((UserDetails) principal).getUsername());
+		    	 System.out.println(user.getClient().getId());  
+		    	 return user;
+		     }
+		     else {
+		         return null;      
+		      }	 
+
 	  }
-	
-	
+	 
+	// RETURN CONNECTED CLIENT
+		 @GetMapping("/profilClient")
+		  public Client getConnectdClient() {
+			  Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			     if (principal instanceof UserDetails) {
+			    	 User user = userRepository.findByEmail(((UserDetails) principal).getUsername());
+			    	 System.out.println(user.getClient());  
+			    	 return user.getClient();
+			     }
+			     else {
+			         return null;      
+			      }	 
+
+		  }
+	 
+		
+		// RETURN CONNECTED USER
+		 @GetMapping("/profileId")
+		  public int getConnectedUser() {
+			  Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			     if (principal instanceof UserDetails) {
+			    	 User user = userRepository.findByEmail(((UserDetails) principal).getUsername());
+			    	 System.out.println(user.getClient().getId());  
+			    
+			    	 return user.getClient().getId();
+			     }
+			     else {
+			         return (Integer) null;      
+			      }  		 
+
+		  }
+	  
 	/*@GetMapping("/getImpayed")
 	  public String getImpayed() {
 		this.getInfos();

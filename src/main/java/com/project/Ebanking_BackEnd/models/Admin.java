@@ -15,14 +15,19 @@ import javax.validation.constraints.Size;
 //@DiscriminatorValue("1")
 public class Admin extends Profil {
 	
-	
-	
 	public Admin(@NotBlank @Size(max = 30) String firstname, @NotBlank @Size(max = 30) String lastname,
 			@NotBlank @Size(max = 30) String phone, @NotBlank @Size(max = 30) String address,
 			java.util.Date dateOfBirth, @Email String email, @NotBlank @Size(max = 120) String confirmationEmail) {
 		super(firstname, lastname, phone, address, dateOfBirth, email, confirmationEmail);
 		// TODO Auto-generated constructor stub
 	}
+
+	public Admin() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
+	
 	
 	
 }	

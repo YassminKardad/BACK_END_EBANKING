@@ -12,7 +12,7 @@ public interface IUser {
 
 	User findByPassword(String password);
 
-	Optional<User> findByEmail(String email);
+	User findByEmail(String email);
 
 	User findByClient(Client stdu);
 

@@ -44,6 +44,33 @@ public class EmailServiceImp {
 				e.printStackTrace();
 			}
 	    }	
+	 
+	 public void sendCode(String pass, String dest) {
+		 System.out.println("Sending Code ... ");
+	        SimpleMailMessage msg = new SimpleMailMessage();
+	        msg.setTo(dest);
+	        String newLine = System.getProperty("line.separator");
+	       // char[] password = generatePassword();
+
+	        String subject= new StringBuilder()
+	                .append("Hello !!!!!!!")
+	                .append(newLine)
+	                .append("Here is the code  "+pass)
+	                .append(newLine)
+	                .append("...")
+	                .toString(); 
+	        
+	        msg.setSubject(" Message | E-banking App");
+	        msg.setText(subject);
+	        //msg .setTLS(true);
+	        try {
+				javaMailSender.send(msg);
+				System.out.println("email sent !!! ");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	    }	
 	/* private final JavaMailSender javaMailSender;
 
 	    private static final Logger log = (Logger) LoggerFactory.getLogger(EmailServiceImp.class);

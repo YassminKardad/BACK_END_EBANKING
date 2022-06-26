@@ -145,7 +145,6 @@ public class User {
 		this.has_Already_loggedIn = false;
 		this.email = email;
 		this.password=pass;
-		System.out.println(this.password);
 		/*Role role = new Role(ERole.ROLE_ADMIN);
 		this.roles.add(role);*/	
 		}
@@ -203,6 +202,20 @@ public class User {
 		Role role = new Role(ERole.ROLE_AGENT);
 		this.roles.add(role);
 	}
+	
+	//for Admin
+		public User(@NotBlank @Size(max = 30) String firstname, @NotBlank @Size(max = 30) String lastname,
+				@Email String email, String password,Admin admin) {
+			super();
+			this.firstname = firstname;
+			this.lastname = lastname;
+			this.email = email;
+			this.password = password;
+			this.admin=admin;
+			this.has_Already_loggedIn = false;
+			Role role = new Role(ERole.ROLE_AGENT);
+			this.roles.add(role);
+		}
 
 	
 
@@ -327,8 +340,7 @@ public class User {
         for(int i = 4; i< 6 ; i++) {
            password[i] = combinedChars.charAt(random.nextInt(combinedChars.length()));
         }
-        
-        System.out.println("in fct  "+password);
+       
         return password;
      }
 

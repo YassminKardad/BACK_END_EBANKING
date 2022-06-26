@@ -39,6 +39,7 @@ import com.project.Ebanking_BackEnd.repository.AgentRepository;
 import com.project.Ebanking_BackEnd.repository.RoleRepository;
 import com.project.Ebanking_BackEnd.repository.UserRepository;
 import com.project.Ebanking_BackEnd.services.AgentService;
+import com.project.Ebanking_BackEnd.services.EmailServiceImp;
 import com.project.Ebanking_BackEnd.services.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -55,12 +56,15 @@ public class AgentController {
 	  
 	@Autowired
 	AgentRepository repo;
-	 @Autowired
-	  PasswordEncoder encoder;
-	 @Autowired
-	  UserRepository userRepository;
-	  @Autowired
-	  RoleRepository roleRepository;
+	@Autowired
+	PasswordEncoder encoder;
+	@Autowired
+	UserRepository userRepository;
+	@Autowired
+	RoleRepository roleRepository;
+	  
+	@Autowired
+	EmailServiceImp emailService;
     @Autowired
     public AgentController(AgentService serv) {
         this.serv = serv;
@@ -91,15 +95,11 @@ public class AgentController {
       if (repo.existsByEmail(signUpRequest.getEmail())) {
         return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is already in use!"));
       }
-
-      // Create new user's account
      
       
       //Generate password 
       char[] password= User.generatePassword();
       System.out.println(password);
-      //System.out.println(java.nio.CharBuffer.wrap(password));
-      System.out.println(String.valueOf(password));
       
      Agent user1 = new Agent(signUpRequest.getFirstname(),signUpRequest.getLastname(),signUpRequest.getPhone(),signUpRequest.getAddress(),signUpRequest.getDateOfBirth(),
                            signUpRequest.getEmail(),signUpRequest.getConfirmationEmail(),signUpRequest.getPieceIdentity(),signUpRequest.getN_pieceIdentity(),signUpRequest.getN_Immatr(),signUpRequest.getN_Pattente(),signUpRequest.getPieceJointe()                         );
@@ -114,44 +114,9 @@ public class AgentController {
      Role modRole = roleRepository.findByName(ERole.ROLE_AGENT)
              .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
          roles.add(modRole);
-         
-         //user.setRoles(ERole.ROLE_CLIENT);
-     // Set<String> strRoles = signUpRequest.getRole();
+       
      
-
-      /*if (strRoles == null) {
-        Role userRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-            .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-        roles.add(userRole);
-      } else {
-        strRoles.forEach(role -> {
-          switch (role) {
-          case "admin":
-            Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            roles.add(adminRole);
-
-            break;
-          case "client":
-            Role modRole = roleRepository.findByName(ERole.ROLE_CLIENT)
-                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            roles.add(modRole);
-            
-            break;
-          case "agent":
-              Role agentRole = roleRepository.findByName(ERole.ROLE_AGENT)
-                  .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-              roles.add(agentRole);
-          default:
-            Role userRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            roles.add(userRole);
-          }
-        });
-      }*/
-      //EmailServiceImp emailService = new EmailServiceImp();
-     
-      //emailService.sendEmail(String.valueOf(password),signUpRequest.getEmail());
+     emailService.sendEmail(String.valueOf(password),signUpRequest.getEmail());
      user.setRoles(roles);
       userRepository.save(user);
 

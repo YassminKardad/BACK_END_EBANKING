@@ -31,7 +31,7 @@ public class UserService implements IUser{
 		 return repo.findByPassword(oldPassword);
 	}
 	@Override
-	public Optional<User> findByEmail(String userEmail) {
+	public User findByEmail(String userEmail) {
 		// TODO Auto-generated method stub
 		return repo.findByEmail(userEmail);
 	}

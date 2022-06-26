@@ -12,7 +12,7 @@ import com.project.Ebanking_BackEnd.models.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
   //Optional<User> findByUsername(String username);
-  Optional<User> findByEmail(String mail);
+  User findByEmail(String mail);
   //Boolean existsByUsername(String username);
 
   Boolean existsByEmail(String email);
