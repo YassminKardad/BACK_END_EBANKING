@@ -120,7 +120,6 @@ public class AuthController {
            userDetails.getId(), 
            userDetails.getUsername(), 
            userDetails.getEmail(), 
-           userDetails.getUser().getClient(),
            roles));
    
    /*return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())

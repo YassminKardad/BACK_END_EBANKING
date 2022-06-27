@@ -141,7 +141,7 @@ public class ClientController {
       //EmailServiceImp emailService = new EmailServiceImp();
      
       //emailService.sendEmail(String.valueOf(password),signUpRequest.getEmail());
-    emailService.sendEmail(String.valueOf(password),signUpRequest.getEmail());
+     emailService.sendEmail(String.valueOf(password),signUpRequest.getEmail());
         
       user.setRoles(roles);
       userRepository.save(user);
